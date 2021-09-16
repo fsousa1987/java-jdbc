@@ -3,19 +3,19 @@ import java.sql.*;
 public class TestaListagem {
 
     public static void main(String[] args) throws SQLException {
-        Connection connection = DriverManager
-                .getConnection("jdbc:mysql://172.17.0.2/loja_virtual?useTimezone=true&serverTimezone=UTC", "root", "admin");
+        var connectionFactory = new ConnectionFactory();
+        var connection = connectionFactory.recuperarConexao();
 
-        Statement statement = connection.createStatement();
+        var statement = connection.createStatement();
         statement.execute("SELECT ID, NOME, DESCRICAO FROM PRODUTO");
-        ResultSet resultSet = statement.getResultSet();
+        var resultSet = statement.getResultSet();
 
         while (resultSet.next()) {
-            Integer id = resultSet.getInt("ID");
+            var id = resultSet.getInt("ID");
             System.out.println(id);
-            String nome = resultSet.getString("NOME");
+            var nome = resultSet.getString("NOME");
             System.out.println(nome);
-            String descricao = resultSet.getString("DESCRICAO");
+            var descricao = resultSet.getString("DESCRICAO");
             System.out.println(descricao);
         }
 
