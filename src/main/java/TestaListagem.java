@@ -6,8 +6,8 @@ public class TestaListagem {
         var connectionFactory = new ConnectionFactory();
         var connection = connectionFactory.recuperarConexao();
 
-        var statement = connection.createStatement();
-        statement.execute("SELECT ID, NOME, DESCRICAO FROM PRODUTO");
+        var statement = connection.prepareStatement("SELECT ID, NOME, DESCRICAO FROM PRODUTO");
+        statement.execute();
         var resultSet = statement.getResultSet();
 
         while (resultSet.next()) {
