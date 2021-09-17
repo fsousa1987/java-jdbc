@@ -13,3 +13,7 @@ Repositório do treinamento da Alura sobre JDBC
 - Camada de persistência com DAO
 - Evitando queries N + 1
 - Aplicação Desktop
+
+## Observações gerais
+
+- O commit <b>509189e</b> está com a mensagem errada. Falha minha! A mensagem correta do commit é: "Refactor listagem e remoção"
