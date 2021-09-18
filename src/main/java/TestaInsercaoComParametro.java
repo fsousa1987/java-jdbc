@@ -1,19 +1,29 @@
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public class TestaInsercaoComParametro {
 
     public static void main(String[] args) throws SQLException {
-        var nome = "MOUSE";
-        var descricao = "MOUSE SEM FIO); delete from PRODUTO;";
         var factory = new ConnectionFactory();
         var connection = factory.recuperarConexao();
+        connection.setAutoCommit(false);
 
         var statement = connection
                 .prepareStatement("INSERT INTO PRODUTO (nome, descricao) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
 
+        adicionarVariavel("SMARTTV", "45 POLEGADAS", statement);
+        adicionarVariavel("RADIO", "RADIO DE BATERIA", statement);
+    }
+
+    private static void adicionarVariavel(String nome, String descricao, PreparedStatement statement) throws SQLException {
         statement.setString(1, nome);
         statement.setString(2, descricao);
+        /*
+        if (nome.equals("RADIO")) {
+            throw new RuntimeException("Não foi possível adicionar o produto");
+        }
+         */
 
         statement.execute();
 
