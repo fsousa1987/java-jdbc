@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 public class ProdutoDAO {
 
-    private Connection connection;
+    private final Connection connection;
 
     public ProdutoDAO(Connection connection) {
         this.connection = connection;
