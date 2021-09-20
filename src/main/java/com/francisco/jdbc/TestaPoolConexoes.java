@@ -1,3 +1,5 @@
+package com.francisco.jdbc;
+
 import java.sql.SQLException;
 
 public class TestaPoolConexoes {
