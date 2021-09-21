@@ -17,6 +17,9 @@ public class CategoriaDAO {
 
     public List<Categoria> listar() throws SQLException {
         var categorias = new ArrayList<Categoria>();
+
+        System.out.println("Executando a query de listar categoria");
+
         var sql = "SELECT ID, NOME FROM CATEGORIA";
 
         try (var preparedStatement = connection.prepareStatement(sql)) {
