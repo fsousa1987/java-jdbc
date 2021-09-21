@@ -1,4 +1,4 @@
-package com.francisco.jdbc;
+package com.francisco.jdbc.factory;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 

@@ -1,6 +1,7 @@
 package com.francisco.jdbc;
 
 import com.francisco.jdbc.dao.ProdutoDAO;
+import com.francisco.jdbc.factory.ConnectionFactory;
 import com.francisco.jdbc.modelo.Produto;
 
 import java.sql.*;

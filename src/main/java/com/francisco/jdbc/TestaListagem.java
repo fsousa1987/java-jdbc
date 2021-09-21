@@ -1,5 +1,7 @@
 package com.francisco.jdbc;
 
+import com.francisco.jdbc.factory.ConnectionFactory;
+
 import java.sql.*;
 
 public class TestaListagem {
