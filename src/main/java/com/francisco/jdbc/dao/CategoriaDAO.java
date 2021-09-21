@@ -1,6 +1,7 @@
 package com.francisco.jdbc.dao;
 
 import com.francisco.jdbc.modelo.Categoria;
+import com.francisco.jdbc.modelo.Produto;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -29,6 +30,33 @@ public class CategoriaDAO {
                 while (resultSet.next()) {
                     var categoria = new Categoria(resultSet.getInt(1), resultSet.getString(2));
                     categorias.add(categoria);
+                }
+            }
+        }
+        return categorias;
+    }
+
+    public List<Categoria> listarComProdutos() throws SQLException {
+        Categoria ultima = null;
+
+        var categorias = new ArrayList<Categoria>();
+
+        System.out.println("Executando a query de listar categoria");
+
+        var sql = "SELECT C.ID, C.NOME, P.ID, P.NOME, P.DESCRICAO FROM CATEGORIA C INNER JOIN PRODUTO P ON C.id = P.categoria_id";
+
+        try (var preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.execute();
+
+            try (var resultSet = preparedStatement.getResultSet()) {
+                while (resultSet.next()) {
+                    if (ultima == null || !ultima.getNome().equals(resultSet.getString(2))) {
+                        var categoria = new Categoria(resultSet.getInt(1), resultSet.getString(2));
+                        ultima = categoria;
+                        categorias.add(categoria);
+                    }
+                    var produto = new Produto(resultSet.getInt(3), resultSet.getString(4), resultSet.getString(5));
+                    ultima.adicionar(produto);
                 }
             }
         }
