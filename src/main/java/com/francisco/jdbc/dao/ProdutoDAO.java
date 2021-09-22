@@ -18,15 +18,35 @@ public class ProdutoDAO {
     public void salvar(Produto produto) throws SQLException {
         var sql = "INSERT INTO PRODUTO (NOME, DESCRICAO) VALUES (?, ?)";
 
-        try(var statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1, produto.getNome());
-            statement.setString(2, produto.getDescricao());
+        try (var pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            statement.execute();
+            pstm.setString(1, produto.getNome());
+            pstm.setString(2, produto.getDescricao());
 
-            try(var resultSet = statement.getGeneratedKeys()) {
-                while (resultSet.next()) {
-                    produto.setId(resultSet.getInt(1));
+            pstm.execute();
+
+            try (var rst = pstm.getGeneratedKeys()) {
+                while (rst.next()) {
+                    produto.setId(rst.getInt(1));
+                }
+            }
+        }
+    }
+
+    public void salvarComCategoria(Produto produto) throws SQLException {
+        var sql = "INSERT INTO PRODUTO (NOME, DESCRICAO, CATEGORIA_ID) VALUES (?, ?, ?)";
+
+        try (var pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            pstm.setString(1, produto.getNome());
+            pstm.setString(2, produto.getDescricao());
+            pstm.setInt(3, produto.getCategoriaId());
+
+            pstm.execute();
+
+            try (var rst = pstm.getGeneratedKeys()) {
+                while (rst.next()) {
+                    produto.setId(rst.getInt(1));
                 }
             }
         }
@@ -34,45 +54,53 @@ public class ProdutoDAO {
 
     public List<Produto> listar() throws SQLException {
         var produtos = new ArrayList<Produto>();
-
         var sql = "SELECT ID, NOME, DESCRICAO FROM PRODUTO";
 
-        try(var preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.execute();
+        try (var pstm = connection.prepareStatement(sql)) {
+            pstm.execute();
 
-            try(var resultSet = preparedStatement.getResultSet()) {
-                while (resultSet.next()) {
-                    Produto produto =
-                            new Produto(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3));
-
-                    produtos.add(produto);
-                }
-            }
+            trasformarResultSetEmProduto(produtos, pstm);
         }
         return produtos;
     }
 
-    public List<Produto> buscar(Categoria categoria) throws SQLException {
+    public List<Produto> buscar(Categoria ct) throws SQLException {
         var produtos = new ArrayList<Produto>();
+        var sql = "SELECT ID, NOME, DESCRICAO FROM PRODUTO WHERE CATEGORIA_ID = ?";
 
-        System.out.println("Executando a query de buscar produto por categoria");
+        try (var pstm = connection.prepareStatement(sql)) {
+            pstm.setInt(1, ct.getId());
+            pstm.execute();
 
-        var sql = "SELECT ID, NOME, DESCRICAO FROM PRODUTO WHERE categoria_id = ?";
-
-        try(var preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, categoria.getId());
-
-            preparedStatement.execute();
-
-            try(var resultSet = preparedStatement.getResultSet()) {
-                while (resultSet.next()) {
-                    Produto produto =
-                            new Produto(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3));
-
-                    produtos.add(produto);
-                }
-            }
+            trasformarResultSetEmProduto(produtos, pstm);
         }
         return produtos;
+    }
+
+    public void deletar(Integer id) throws SQLException {
+        try (var stm = connection.prepareStatement("DELETE FROM PRODUTO WHERE ID = ?")) {
+            stm.setInt(1, id);
+            stm.execute();
+        }
+    }
+
+    public void alterar(String nome, String descricao, Integer id) throws SQLException {
+        try (var stm = connection
+                .prepareStatement("UPDATE PRODUTO P SET P.NOME = ?, P.DESCRICAO = ? WHERE ID = ?")) {
+            stm.setString(1, nome);
+            stm.setString(2, descricao);
+            stm.setInt(3, id);
+            stm.execute();
+        }
+    }
+
+    private void trasformarResultSetEmProduto(List<Produto> produtos, PreparedStatement pstm) throws SQLException {
+        try (var rst = pstm.getResultSet()) {
+            while (rst.next()) {
+                var produto = new Produto(rst.getInt(1), rst.getString(2), rst.getString(3));
+
+                produtos.add(produto);
+            }
+        }
     }
 }
