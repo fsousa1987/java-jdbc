@@ -1,15 +1,22 @@
 package com.francisco.jdbc.controller;
 
+import com.francisco.jdbc.dao.CategoriaDAO;
+import com.francisco.jdbc.factory.ConnectionFactory;
 import com.francisco.jdbc.modelo.Categoria;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CategoriaController {
 
+    private final CategoriaDAO categoriaDAO;
+
+    public CategoriaController() {
+        var connection = new ConnectionFactory().recuperarConexao();
+
+        this.categoriaDAO = new CategoriaDAO(connection);
+    }
+
     public List<Categoria> listar() {
-        var categorias = new ArrayList<Categoria>();
-        categorias.add(new Categoria(1, "Categoria de teste"));
-        return categorias;
+        return this.categoriaDAO.listar();
     }
 }

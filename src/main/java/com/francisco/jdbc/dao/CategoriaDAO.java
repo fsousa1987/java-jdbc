@@ -16,24 +16,30 @@ public class CategoriaDAO {
         this.connection = connection;
     }
 
-    public List<Categoria> listar() throws SQLException {
-        var categorias = new ArrayList<Categoria>();
+    public List<Categoria> listar() {
+        try {
+            var categorias = new ArrayList<Categoria>();
 
-        System.out.println("Executando a query de listar categoria");
+            System.out.println("Executando a query de listar categoria");
 
-        var sql = "SELECT ID, NOME FROM CATEGORIA";
+            var sql = "SELECT ID, NOME FROM CATEGORIA";
 
-        try (var preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.execute();
+            try (var preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.execute();
 
-            try (var resultSet = preparedStatement.getResultSet()) {
-                while (resultSet.next()) {
-                    var categoria = new Categoria(resultSet.getInt(1), resultSet.getString(2));
-                    categorias.add(categoria);
+                try (var resultSet = preparedStatement.getResultSet()) {
+                    while (resultSet.next()) {
+                        var categoria = new Categoria(resultSet.getInt(1), resultSet.getString(2));
+                        categorias.add(categoria);
+                    }
                 }
             }
+            return categorias;
         }
-        return categorias;
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public List<Categoria> listarComProdutos() throws SQLException {

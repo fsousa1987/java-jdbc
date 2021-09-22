@@ -29,4 +29,9 @@ public class Categoria {
     public List<Produto> getProdutos() {
         return produtos;
     }
+
+    @Override
+    public String toString() {
+        return this.nome;
+    }
 }
