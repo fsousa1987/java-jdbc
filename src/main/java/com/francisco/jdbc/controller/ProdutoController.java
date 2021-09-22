@@ -1,27 +1,33 @@
 package com.francisco.jdbc.controller;
 
+import com.francisco.jdbc.dao.ProdutoDAO;
+import com.francisco.jdbc.factory.ConnectionFactory;
 import com.francisco.jdbc.modelo.Produto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProdutoController {
 
+    private final ProdutoDAO produtoDAO;
+
+    public ProdutoController() {
+        var connection = new ConnectionFactory().recuperarConexao();
+        this.produtoDAO = new ProdutoDAO(connection);
+    }
+
     public void deletar(Integer id) {
-        System.out.println("Deletando produto");
+        this.produtoDAO.deletar(id);
     }
 
     public void salvar(Produto produto) {
-        System.out.println("Salvando produto");
+        this.produtoDAO.salvar(produto);
     }
 
     public List<Produto> listar() {
-        var produtos = new ArrayList<Produto>();
-        produtos.add(new Produto("Nome do Produto de teste", "Descrição do produto de teste"));
-        return produtos;
+        return this.produtoDAO.listar();
     }
 
     public void alterar(String nome, String descricao, Integer id) {
-        System.out.println("Alterando produto");
+        this.produtoDAO.alterar(nome, descricao, id);
     }
 }
